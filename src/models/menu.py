@@ -52,7 +52,7 @@ class MenuItem(ABC):
 
     def __init__(self, name: str, base_price: float, category: MenuCategory,
                  ingredients: List[str] = None, calories: int = 0):
-        # 🔄 TRANSFER: menu.py → logger (log_operation)
+        # 🔄 TRANSFER: menu.py -> logger (log_operation)
         log_operation("MenuItem Creation", {"name": name, "category": category.value})
 
         # Приватные атрибуты для энкапсуляции
@@ -105,7 +105,7 @@ class MenuItem(ABC):
             raise ValueError("Price cannot be negative")
         old_price = self._base_price
         self._base_price = value
-        log_business_rule("Price Change", f"{self.name}: ${old_price:.2f} → ${value:.2f}")
+        log_business_rule("Price Change", f"{self.name}: ${old_price:.2f} -> ${value:.2f}")
 
     @property
     def available(self) -> bool:
@@ -143,12 +143,16 @@ class MenuItem(ABC):
         📋 CHECK: @classmethod - Factory method для Big Mac
         Factory method для создания Big Mac
         """
-        # 🔄 TRANSFER: menu.py → MenuItem.__init__ (create_big_mac data)
+        # 🔄 TRANSFER: menu.py -> MenuItem.__init__ (create_big_mac data)
         log_transfer("menu.py", "MenuItem.__init__", "Big Mac creation data")
 
+        # Создаем через конкретную реализацию - Burger
+        from src.models.menu import Burger  # Избегаем циклический импорт
+
         ingredients = ["special sauce", "lettuce", "cheese", "pickles", "onions", "sesame seed bun", "beef patty"]
-        big_mac = cls("Big Mac", 4.99, MenuCategory.BURGERS, ingredients, 550)
+        big_mac = Burger("Big Mac", 4.99, 1, True, ingredients)
         big_mac._preparation_time = 8
+        big_mac._calories = 550
 
         log_requirement_check("@classmethod", "EXECUTED", "MenuItem.create_big_mac()")
         return big_mac
@@ -156,8 +160,12 @@ class MenuItem(ABC):
     @classmethod
     def create_happy_meal(cls, main_item: str, drink: str = "Apple Juice", toy: str = "Random"):
         """Factory method для Happy Meal"""
+        from src.models.menu import Burger
+
         ingredients = [main_item, drink, "apple slices", toy]
-        happy_meal = cls(f"Happy Meal ({main_item})", 3.99, MenuCategory.HAPPY_MEAL, ingredients, 400)
+        happy_meal = Burger(f"Happy Meal ({main_item})", 3.99, 1, False, ingredients)
+        happy_meal._calories = 400
+        happy_meal._category = MenuCategory.HAPPY_MEAL
         return happy_meal
 
     @classmethod
@@ -256,7 +264,7 @@ class Burger(MenuItem):
         # ✅ WYMAGANIE: super() - вызов конструктора родительского класса
         super().__init__(name, base_price, MenuCategory.BURGERS, ingredients)
 
-        # 🔄 TRANSFER: menu.py → Burger.__init__ (burger specific data)
+        # 🔄 TRANSFER: menu.py -> Burger.__init__ (burger specific data)
         log_transfer("MenuItem.__init__", "Burger.__init__", "burger-specific attributes")
 
         # Специфичные для бургера атрибуты
@@ -270,10 +278,10 @@ class Burger(MenuItem):
         # 📋 CHECK: Dziedziczenie - подтверждение наследования
         log_requirement_check("Inheritance", "SUCCESS", f"Burger extends MenuItem: {name}")
 
-    # ✅ WYMAGANIE: Nadpisywanie metod - переопределение методов родителя
+    # ✅ WYMAGANIE: Nadpisywanie metод - переопределение методов родителя
     def get_final_price(self, size: ItemSize = ItemSize.MEDIUM) -> float:
         """
-        📋 CHECK: Nadpisywanie metod - переопределенный метод расчета цены
+        📋 CHECK: Nadpisywanie metод - переопределенный метод расчета цены
         Переопределенный метод расчета финальной цены для бургера
         """
         # Базовая цена из родительского класса
@@ -357,7 +365,7 @@ class Fries(MenuItem):
 
         super().__init__(name, base_price, MenuCategory.SIDES, ingredients)
 
-        # 🔄 TRANSFER: MenuItem.__init__ → Fries.__init__ (size and seasoning data)
+        # 🔄 TRANSFER: MenuItem.__init__ -> Fries.__init__ (size and seasoning data)
         log_transfer("MenuItem.__init__", "Fries.__init__", "fries-specific attributes")
 
         self.size = size
@@ -377,10 +385,10 @@ class Fries(MenuItem):
         }
         return price_map.get(size, 2.49)
 
-    # ✅ WYMAGANIE: Nadpisywanie metод - переопределение метода
+    # ✅ WYMAGANIE: Nadpisывание metод - переопределение метода
     def get_final_price(self, size: ItemSize = None) -> float:
         """
-        📋 CHECK: Nadpisywanie metod - переопределенный расчет цены для фри
+        📋 CHECK: Nadpisывание metод - переопределенный расчет цены для фри
         """
         # Для фри размер уже учтен в base_price
         final_price = self.base_price
@@ -411,7 +419,7 @@ class Fries(MenuItem):
             self._name = f"French Fries ({new_size.value.title()})"
             self.base_price = self._get_price_by_size(new_size)
 
-            log_business_rule("Size Upgrade", f"Fries: {old_size.value} → {new_size.value}")
+            log_business_rule("Size Upgrade", f"Fries: {old_size.value} -> {new_size.value}")
 
 
 # ✅ WYMAGANIE: Dziedziczenie - Класс Drink наследует от MenuItem
@@ -421,7 +429,7 @@ class Drink(MenuItem):
     McDonald's напитки (газировка, кофе, соки)
     """
 
-    # ✅ WYMAGANIE: Nadpisywanie atrybutów
+    # ✅ WYMAGANIE: Nadpisывание atrybutów
     default_preparation_time = 2  # Самое быстрое приготовление
     category_name = "McDonald's Beverages"
 
@@ -433,7 +441,7 @@ class Drink(MenuItem):
 
         super().__init__(name, base_price, category)
 
-        # 🔄 TRANSFER: MenuItem.__init__ → Drink.__init__ (drink attributes)
+        # 🔄 TRANSFER: MenuItem.__init__ -> Drink.__init__ (drink attributes)
         log_transfer("MenuItem.__init__", "Drink.__init__", "drink-specific attributes")
 
         self.size = size
@@ -459,10 +467,10 @@ class Drink(MenuItem):
         }
         return price_map.get(size, 1.79)
 
-    # ✅ WYMAGANIE: Nadpisywanie metод
+    # ✅ WYMAGANIE: Nadpisывание metod
     def get_final_price(self, size: ItemSize = None) -> float:
         """
-        📋 CHECK: Nadpisywanie metод - расчет цены напитка
+        📋 CHECK: Nadpisывание metod - расчет цены напитка
         """
         final_price = self.base_price
 
@@ -519,7 +527,7 @@ class BreakfastItem(MenuItem):
     Специальный класс для завтраков McDonald's (доступны до 10:30)
     """
 
-    # ✅ WYMAGANIE: Nadpisywanie atrybutów
+    # ✅ WYMAGANIE: Nadpisывание atrybutów
     default_preparation_time = 7  # Завтраки готовятся дольше
     category_name = "McDonald's Breakfast"
 
@@ -528,7 +536,7 @@ class BreakfastItem(MenuItem):
         # ✅ WYMAGANIE: super()
         super().__init__(name, base_price, MenuCategory.BREAKFAST, ingredients)
 
-        # 🔄 TRANSFER: MenuItem.__init__ → BreakfastItem.__init__
+        # 🔄 TRANSFER: MenuItem.__init__ -> BreakfastItem.__init__
         log_transfer("MenuItem.__init__", "BreakfastItem.__init__", "breakfast attributes")
 
         self.has_egg = has_egg
@@ -537,7 +545,7 @@ class BreakfastItem(MenuItem):
 
         log_requirement_check("Inheritance", "SUCCESS", f"BreakfastItem extends MenuItem: {name}")
 
-    # ✅ WYMAGANIE: Nadpisywanie metод
+    # ✅ WYMAGANIE: Nadpisывание metod
     def get_final_price(self, size: ItemSize = ItemSize.MEDIUM) -> float:
         """Расчет цены завтрака"""
         final_price = self.base_price
@@ -584,7 +592,7 @@ def demo_menu_system():
     print("🍟 McDONALD'S MENU SYSTEM DEMO")
     print("=" * 50)
 
-    # 🔄 TRANSFER: demo → menu classes (создание объектов)
+    # 🔄 TRANSFER: demo -> menu classes (создание объектов)
     log_transfer("demo_menu_system", "MenuItem classes", "menu item creation")
 
     # 1. ✅ WYMAGANIE: @classmethod - Factory methods
@@ -597,7 +605,7 @@ def demo_menu_system():
     print(f"Created: {big_mac}")
     print(f"Created: {happy_meal}")
 
-    # 2. ✅ WYMAGANIE: Dziedziczenie + Nadpisywanie
+    # 2. ✅ WYMAGANIE: Dziedziczenie + Nadpisывание
     print("\n2. INHERITANCE & METHOD OVERRIDING")
     print("-" * 30)
 

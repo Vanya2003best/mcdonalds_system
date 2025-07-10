@@ -14,49 +14,57 @@ from typing import List, Dict, Any
 # Dodajemy ścieżki do importów
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import wszystkich komponentów systemu
-from src.utils.logger import log_operation, log_business_rule, log_requirement_check, log_transfer
-from src.exceptions.mcdonalds_exceptions import *
+try:
+    # Import wszystkich komponentów systemu
+    from src.utils.logger import log_operation, log_business_rule, log_requirement_check, log_transfer
+    from src.exceptions.mcdonalds_exceptions import *
 
-# Modele
-from src.models.menu import MenuItem, Burger, Fries, Drink, BreakfastItem, MenuCategory, ItemSize
-from src.models.staff import (
-    Staff, Cashier, KitchenStaff, ShiftManager, GeneralManager,
-    StaffRole, AccessLevel
-)
-from src.models.customer import (
-    Customer, RegularCustomer, LoyaltyCustomer, VIPCustomer,
-    CustomerType, LoyaltyTier
-)
-from src.models.order import (
-    Order, DineInOrder, TakeoutOrder, DriveThruOrder, DeliveryOrder,
-    OrderStatus, OrderType
-)
-from src.models.payment import (
-    Payment, CashPayment, CardPayment, MobilePayment, GiftCardPayment,
-    PaymentStatus, PaymentMethod
-)
-from src.models.restaurant import McDonaldsRestaurant, RestaurantStatus
+    # Modele
+    from src.models.menu import MenuItem, Burger, Fries, Drink, BreakfastItem, MenuCategory, ItemSize
+    from src.models.staff import (
+        Staff, Cashier, KitchenStaff, ShiftManager, GeneralManager,
+        StaffRole, AccessLevel
+    )
+    from src.models.customer import (
+        Customer, RegularCustomer, LoyaltyCustomer, VIPCustomer,
+        CustomerType, LoyaltyTier
+    )
+    from src.models.order import (
+        Order, DineInOrder, TakeoutOrder, DriveThruOrder, DeliveryOrder,
+        OrderStatus, OrderType
+    )
+    from src.models.payment import (
+        Payment, CashPayment, CardPayment, MobilePayment, GiftCardPayment,
+        PaymentStatus, PaymentMethod
+    )
+    from src.models.restaurant import McDonaldsRestaurant, RestaurantStatus
 
-# Wzorce projektowe
-from src.patterns.strategy import (
-    DiscountManager, PercentageDiscountStrategy, FixedAmountDiscountStrategy,
-    BuyOneGetOneStrategy, TimeBasedDiscountStrategy, LoyaltyTierDiscountStrategy
-)
-from src.patterns.observer import (
-    OrderTracker, KitchenDisplayObserver, CustomerMobileObserver, DriveThruObserver,
-    NotificationType
-)
-from src.patterns.factory import (
-    OrderFactoryManager, DineInOrderFactory, DriveThruOrderFactory,
-    DeliveryOrderFactory
-)
+    # Wzorce projektowe
+    from src.patterns.strategy import (
+        DiscountManager, PercentageDiscountStrategy, FixedAmountDiscountStrategy,
+        BuyOneGetOneStrategy, TimeBasedDiscountStrategy, LoyaltyTierDiscountStrategy
+    )
+    from src.patterns.observer import (
+        OrderTracker, KitchenDisplayObserver, CustomerMobileObserver, DriveThruObserver,
+        NotificationType
+    )
+    from src.patterns.factory import (
+        OrderFactoryManager, DineInOrderFactory, DriveThruOrderFactory,
+        DeliveryOrderFactory
+    )
 
-# Serwisy
-from src.services.order_service import OrderService
+    # Serwisy
+    from src.services.order_service import OrderService
 
-# Utilities
-from src.utils.validators import DataValidator, ValidationResult
+    # Utilities
+    from src.utils.validators import DataValidator, ValidationResult
+
+    print("✅ All imports successful!")
+
+except ImportError as e:
+    print(f"❌ Import error: {e}")
+    print("Please ensure all files are in correct locations.")
+    sys.exit(1)
 
 
 class McDonaldsSystemDemo:
@@ -124,11 +132,13 @@ class McDonaldsSystemDemo:
             self._demonstrate_integration()
 
             # 7. Raport końcowy
-            self._generate_final_report()
+            return self._generate_final_report()
 
         except Exception as e:
             print(f"❌ Demo failed with error: {str(e)}")
             log_business_rule("Demo Failed", str(e))
+            import traceback
+            traceback.print_exc()
             raise
 
     def _initialize_system(self):
@@ -230,28 +240,28 @@ class McDonaldsSystemDemo:
 
         # 1. ✅ WYMAGANIE: Klasy
         print("\n1. CLASSES")
-        big_mac = MenuItem.create_big_mac()
+        big_mac = Burger("Big Mac", 4.99, 1, True, ["beef", "cheese", "lettuce"])
         print(f"   Class instance: {big_mac} ({type(big_mac).__name__})")
         self.requirements_checked += 1
 
         # 2. ✅ WYMAGANIE: Dziedziczenie
         print("\n2. INHERITANCE")
         burger = Burger("Demo Burger", 5.99, 2, True)
-        print(f"   Inheritance: {burger} (Burger → MenuItem)")
+        print(f"   Inheritance: {burger} (Burger -> MenuItem)")
         cashier = Cashier("Demo Cashier", "EMP9999")
-        print(f"   Inheritance: {cashier} (Cashier → Staff)")
+        print(f"   Inheritance: {cashier} (Cashier -> Staff)")
         self.requirements_checked += 1
 
         # 3. ✅ WYMAGANIE: Nadpisywanie atrybutów
         print("\n3. ATTRIBUTE OVERRIDING")
-        print(f"   MenuItem base_salary: {MenuItem.total_items_created}")
+        print(f"   MenuItem total_items_created: {MenuItem.total_items_created}")
         print(f"   Burger default_prep_time: {burger.default_preparation_time}")
         self.requirements_checked += 1
 
         # 4. ✅ WYMAGANIE: Nadpisywanie metod
         print("\n4. METHOD OVERRIDING")
-        print(f"   MenuItem work(): {MenuItem}")
-        print(f"   Burger work(): {burger.get_final_price()}")
+        print(f"   MenuItem work(): Generic menu item")
+        print(f"   Burger get_final_price(): ${burger.get_final_price():.2f}")
         self.requirements_checked += 1
 
         # 5. ✅ WYMAGANIE: @classmethod
@@ -265,17 +275,17 @@ class McDonaldsSystemDemo:
         # 6. ✅ WYMAGANIE: @staticmethod
         print("\n6. @STATICMETHOD")
         calories = MenuItem.calculate_calories_with_size(500, ItemSize.LARGE)
-        valid_id = DataValidator.validate_employee_id("EMP1234")
+        valid_id = Staff.is_valid_employee_id("EMP1234")
         print(f"   @staticmethod: calculate_calories_with_size() = {calories}")
-        print(f"   @staticmethod: validate_employee_id() = {valid_id.is_valid}")
+        print(f"   @staticmethod: is_valid_employee_id() = {valid_id}")
         self.requirements_checked += 1
 
         # 7. ✅ WYMAGANIE: Wiele konstruktorów
         print("\n7. MULTIPLE CONSTRUCTORS")
         exact_payment = CashPayment.create_exact_change(10.99)
-        express_order = DriveThruOrder.create_express_order("CUST001", "Big Mac")
+        app_customer = LoyaltyCustomer.create_app_signup("Test User", "+1234567890", "test@test.com")
         print(f"   Multiple constructors: CashPayment.create_exact_change()")
-        print(f"   Multiple constructors: DriveThruOrder.create_express_order()")
+        print(f"   Multiple constructors: LoyaltyCustomer.create_app_signup()")
         self.requirements_checked += 1
 
         # 8. ✅ WYMAGANIE: Enkapsulacja
@@ -283,7 +293,7 @@ class McDonaldsSystemDemo:
         customer = RegularCustomer("Demo Customer", "+1234567890")
         old_name = customer.name
         customer.name = "Updated Name"  # używa setter
-        print(f"   Property setter: {old_name} → {customer.name}")
+        print(f"   Property setter: {old_name} -> {customer.name}")
         print(f"   Private attribute: customer._name (accessed via property)")
         self.requirements_checked += 1
 
@@ -291,13 +301,13 @@ class McDonaldsSystemDemo:
         print("\n9. POLYMORPHISM")
         payments = [
             CashPayment(15.99, 20.00),
-            CardPayment("4111111111111111", "John Doe", 12, 2025, "123", amount=15.99),
-            MobilePayment(15.99, "apple_pay", "DEVICE123"),
+            CardPayment(15.99, "4111111111111111", "John Doe", 12, 2025, "123"),
+            MobilePayment(15.99, "apple_pay", "DEVICE123456"),
         ]
 
         for payment in payments:
             method = payment.get_payment_method().value
-            print(f"   Polymorphic call: {payment.__class__.__name__} → {method}")
+            print(f"   Polymorphic call: {payment.__class__.__name__} -> {method}")
         self.requirements_checked += 1
 
         # 10. ✅ WYMAGANIE: super()
@@ -415,11 +425,19 @@ class McDonaldsSystemDemo:
 
         for order_type, customer_id, kwargs in orders_data:
             # Dodanie pozycji menu
-            menu_items = [
-                {"name": "Big Mac", "quantity": 1, "price": 4.99},
-                {"name": "French Fries", "quantity": 1, "price": 2.49},
-                {"name": "Coca-Cola", "quantity": 1, "price": 1.79}
-            ]
+            if order_type == OrderType.DELIVERY:
+                menu_items = [
+                    {"name": "Big Mac", "quantity": 2, "price": 4.99},  # 2 бургера
+                    {"name": "Quarter Pounder", "quantity": 1, "price": 5.49},  # Дополнительный бургер
+                    {"name": "French Fries", "quantity": 2, "price": 2.49},  # 2 порции фри
+                    {"name": "Coca-Cola", "quantity": 2, "price": 1.79}  # 2 напитка
+                ]  # Итого: ~$20 - выше минимума $15
+            else:
+                menu_items = [
+                    {"name": "Big Mac", "quantity": 1, "price": 4.99},
+                    {"name": "French Fries", "quantity": 1, "price": 2.49},
+                    {"name": "Coca-Cola", "quantity": 1, "price": 1.79}
+                ]
 
             order = self.order_service.create_order(
                 order_type, customer_id, menu_items, **kwargs
@@ -434,7 +452,7 @@ class McDonaldsSystemDemo:
         payment_methods = [
             CashPayment.create_exact_change(self.demo_orders[0].total_amount),
             CardPayment.create_contactless_payment(self.demo_orders[1].total_amount, "TOKEN123"),
-            MobilePayment.create_apple_pay(self.demo_orders[2].total_amount, "DEVICE456")
+            MobilePayment.create_apple_pay(self.demo_orders[2].total_amount, "DEVICE456789")
         ]
 
         for i, payment in enumerate(payment_methods):
@@ -456,7 +474,7 @@ class McDonaldsSystemDemo:
         # Demonstracja przepływu danych między komponentami
         print("\n📊 DATA FLOW DEMONSTRATION")
 
-        # 1. Zamówienie → Fabryka → Obserwator → Usługa
+        # 1. Zamówienie -> Fabryka -> Obserwator -> Usługa
         order = self.order_service.create_order(
             OrderType.DINE_IN,
             "CUST999",
@@ -470,7 +488,7 @@ class McDonaldsSystemDemo:
         self.order_service.update_order_status(order.order_id, OrderStatus.COMPLETED)
 
         print(f"   Order {order.order_id} processed through complete lifecycle")
-        print("   ✅ Factory → Service → Observer → Kitchen Display")
+        print("   ✅ Factory -> Service -> Observer -> Kitchen Display")
 
         # 3. Demonstracja polimorfizmu w płatnościach
         print("\n💰 POLYMORPHISM IN PAYMENTS")
@@ -483,10 +501,10 @@ class McDonaldsSystemDemo:
             except Exception as e:
                 return f"{payment.get_payment_method().value}: ERROR - {str(e)}"
 
-        # Różne typy płatności obsługiwane polimorficznie
+        # Различные типы платежей обслуживаемые полиморфично
         test_payments = [
             CashPayment(10.99, 15.00),
-            GiftCardPayment(10.99, "1234567890123456", 50.00)
+            GiftCardPayment(10.99, "1234567890123456", 1000.00)
         ]
 
         for payment in test_payments:
@@ -506,8 +524,8 @@ class McDonaldsSystemDemo:
 
         # Statystyki systemu
         system_stats = {
-            "Restaurant Status": self.restaurant.status.value,
-            "Active Orders": len(self.restaurant._active_orders),
+            "Restaurant Status": self.restaurant.status.value if self.restaurant else "N/A",
+            "Active Orders": len(getattr(self.restaurant, '_active_orders', {})) if self.restaurant else 0,
             "Staff Members": len(self.demo_staff),
             "Customers": len(self.demo_customers),
             "Orders Processed": len(self.demo_orders),
@@ -548,11 +566,12 @@ class McDonaldsSystemDemo:
             print(f"   ✅ {component}")
 
         # Statystyki Order Service
-        service_stats = self.order_service.get_service_statistics()
-        print(f"\n📊 ORDER SERVICE PERFORMANCE")
-        print(f"   Total Revenue: ${service_stats['financial']['total_revenue_today']:.2f}")
-        print(f"   Average Order Value: ${service_stats['financial']['average_order_value']:.2f}")
-        print(f"   Orders Processed: {service_stats['completed_orders']['today']}")
+        if self.order_service:
+            service_stats = self.order_service.get_service_statistics()
+            print(f"\n📊 ORDER SERVICE PERFORMANCE")
+            print(f"   Total Revenue: ${service_stats['financial']['total_revenue_today']:.2f}")
+            print(f"   Average Order Value: ${service_stats['financial']['average_order_value']:.2f}")
+            print(f"   Orders Processed: {service_stats['completed_orders']['today']}")
 
         # Czas wykonania
         end_time = datetime.now()
