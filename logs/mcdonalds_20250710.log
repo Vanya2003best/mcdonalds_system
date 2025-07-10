@@ -1,0 +1,54 @@
+2025-07-10 09:17:26,846 | INFO | logger | REQUIREMENT CHECK: Main Application | STARTED | McDonald's System Demo
+2025-07-10 09:17:26,846 | INFO | logger | OPERATION: Restaurant Creation | id=MCD0001 | location=Downtown Chicago | owner=Demo Owner
+2025-07-10 09:17:26,850 | INFO | logger | BUSINESS RULE: Demo Failed | Result: Can't instantiate abstract class MenuItem with abstract methods get_final_price, get_preparation_time
+2025-07-10 09:20:18,100 | INFO | logger | OPERATION: Restaurant Creation | id=MCD0001 | location=Downtown Chicago | owner=John Smith
+2025-07-10 09:20:18,105 | INFO | logger | OPERATION: Customer Creation | name=Johnson Family | type=RegularCustomer
+2025-07-10 09:20:18,105 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Johnson Family
+2025-07-10 09:20:18,107 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Johnson Family
+2025-07-10 09:20:18,107 | INFO | logger | OPERATION: Customer Creation | name=Smith Family | type=LoyaltyCustomer
+2025-07-10 09:20:18,107 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Smith Family
+2025-07-10 09:20:18,107 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Smith Family
+2025-07-10 09:20:18,108 | INFO | logger | OPERATION: Customer Creation | name=Driver_1 | type=RegularCustomer
+2025-07-10 09:20:18,108 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Driver_1
+2025-07-10 09:20:18,108 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Driver_1
+2025-07-10 09:20:18,108 | INFO | logger | OPERATION: Customer Creation | name=Home Worker | type=LoyaltyCustomer
+2025-07-10 09:20:18,108 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Home Worker
+2025-07-10 09:20:18,108 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Home Worker
+2025-07-10 09:20:18,108 | INFO | logger | OPERATION: Customer Creation | name=Executive | type=VIPCustomer
+2025-07-10 09:20:18,108 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Executive
+2025-07-10 09:20:18,110 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Executive
+2025-07-10 09:20:18,110 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | VIPCustomer extends LoyaltyCustomer: Executive
+2025-07-10 09:20:18,110 | INFO | logger | OPERATION: Customer Creation | name=Busy Parent | type=RegularCustomer
+2025-07-10 09:20:18,110 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Busy Parent
+2025-07-10 09:20:18,112 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Busy Parent
+2025-07-10 09:20:18,112 | INFO | logger | OPERATION: Customer Creation | name=Student | type=LoyaltyCustomer
+2025-07-10 09:20:18,112 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Student
+2025-07-10 09:20:18,112 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Student
+2025-07-10 09:20:18,113 | INFO | logger | OPERATION: Customer Creation | name=Worker | type=LoyaltyCustomer
+2025-07-10 09:20:18,113 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Worker
+2025-07-10 09:20:18,113 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Worker
+2025-07-10 09:20:18,113 | INFO | logger | OPERATION: Customer Creation | name=Senior | type=RegularCustomer
+2025-07-10 09:20:18,113 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Senior
+2025-07-10 09:20:18,114 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Senior
+2025-07-10 09:20:18,114 | INFO | logger | OPERATION: Customer Creation | name=Celebrity Chef | type=VIPCustomer
+2025-07-10 09:20:18,114 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Celebrity Chef
+2025-07-10 09:20:18,114 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Celebrity Chef
+2025-07-10 09:20:18,115 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | VIPCustomer extends LoyaltyCustomer: Celebrity Chef
+2025-07-10 09:20:18,115 | INFO | logger | OPERATION: Preference Set | customer=CUST000010 | preference=privacy_protection | value=True
+2025-07-10 09:20:18,115 | INFO | logger | OPERATION: Preference Set | customer=CUST000010 | preference=special_requests | value=True
+2025-07-10 09:20:18,115 | INFO | logger | REQUIREMENT CHECK: @classmethod | EXECUTED | VIPCustomer.create_celebrity_vip()
+2025-07-10 09:20:18,115 | INFO | logger | OPERATION: Customer Creation | name=Cash Customer | type=RegularCustomer
+2025-07-10 09:20:18,115 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Cash Customer
+2025-07-10 09:20:18,116 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Cash Customer
+2025-07-10 09:20:18,116 | INFO | logger | OPERATION: Customer Creation | name=Card Customer | type=LoyaltyCustomer
+2025-07-10 09:20:18,116 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Card Customer
+2025-07-10 09:20:18,116 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Card Customer
+2025-07-10 09:20:18,116 | INFO | logger | OPERATION: Customer Creation | name=Mobile Customer | type=RegularCustomer
+2025-07-10 09:20:18,116 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Mobile Customer
+2025-07-10 09:20:18,117 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | RegularCustomer extends Customer: Mobile Customer
+2025-07-10 09:20:18,117 | INFO | logger | OPERATION: Customer Creation | name=Gift Card Customer | type=LoyaltyCustomer
+2025-07-10 09:20:18,117 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Gift Card Customer
+2025-07-10 09:20:18,117 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Gift Card Customer
+2025-07-10 09:20:18,117 | INFO | logger | OPERATION: Customer Creation | name=Tech Savvy | type=LoyaltyCustomer
+2025-07-10 09:20:18,117 | INFO | logger | REQUIREMENT CHECK: Class Creation | SUCCESS | Customer: Tech Savvy
+2025-07-10 09:20:18,117 | INFO | logger | REQUIREMENT CHECK: Inheritance | SUCCESS | LoyaltyCustomer extends Customer: Tech Savvy
